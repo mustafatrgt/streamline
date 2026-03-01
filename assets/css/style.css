@@ -45,6 +45,16 @@ body {
     border: 1px solid rgba(212, 175, 55, 0.25);
 }
 
+.why-icon-chip {
+    background: rgba(10, 13, 18, 0.78) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+.group:hover .why-icon-chip {
+    background: rgba(18, 24, 33, 0.9) !important;
+}
+
 .gold-glow {
     text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
