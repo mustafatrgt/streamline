@@ -39,7 +39,7 @@ const canonicalRewrites = new Map([
 const versionedExtensions = new Set([
   '.css', '.js', '.mjs',
   '.avif', '.webp', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico',
-  '.mp4', '.webm', '.ogg',
+  '.mp4', '.webm', '.ogg', '.vtt',
 ]);
 
 function normalizePathForMatch(urlPath) {

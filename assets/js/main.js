@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function openMenu() {
     if (!mobileMenu) return;
     mobileMenu.classList.remove('translate-x-full');
+    if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
   }
 
   function closeMenu() {
     if (!mobileMenu) return;
     mobileMenu.classList.add('translate-x-full');
+    if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }
 
