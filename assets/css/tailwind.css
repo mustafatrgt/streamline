@@ -727,6 +727,10 @@ video {
   margin-top: 3rem;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .mt-20 {
   margin-top: 5rem;
 }
@@ -1358,6 +1362,10 @@ video {
   text-transform: uppercase;
 }
 
+.normal-case {
+  text-transform: none;
+}
+
 .italic {
   font-style: italic;
 }
@@ -1464,6 +1472,18 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.underline {
+  text-decoration-line: underline;
+}
+
+.decoration-primary\/40 {
+  text-decoration-color: rgb(212 175 55 / 0.4);
+}
+
+.underline-offset-4 {
+  text-underline-offset: 4px;
 }
 
 .antialiased {
@@ -1661,6 +1681,11 @@ video {
 .hover\:text-primary:hover {
   --tw-text-opacity: 1;
   color: rgb(212 175 55 / var(--tw-text-opacity));
+}
+
+.hover\:text-primary-light:hover {
+  --tw-text-opacity: 1;
+  color: rgb(249 226 125 / var(--tw-text-opacity));
 }
 
 .hover\:brightness-110:hover {
