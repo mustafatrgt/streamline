@@ -1,7 +1,7 @@
 if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
-if (!window.location.hash && window.scrollY > 0) {
+if (!window.location.hash) {
   window.scrollTo(0, 0);
 }
 
@@ -323,15 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getHeroVideosForViewport() {
-    const viewportWidths = [
-      window.innerWidth,
-      document.documentElement ? document.documentElement.clientWidth : 0,
-      window.visualViewport ? window.visualViewport.width : 0,
-      window.screen ? window.screen.width : 0,
-    ].filter((value) => Number.isFinite(value) && value > 0);
-
-    const viewportWidth = viewportWidths.length > 0 ? Math.min(...viewportWidths) : window.innerWidth;
-    const desktopActive = viewportWidth >= 768 || desktopQuery.matches;
+    const desktopActive = desktopQuery.matches;
     const activeVideo = desktopActive ? videoDesktop : videoMobile;
     const inactiveVideo = desktopActive ? videoMobile : videoDesktop;
 
@@ -374,9 +366,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (heroSection) {
-    const heroRect = heroSection.getBoundingClientRect();
-    isHeroInViewport = heroRect.bottom > 0 && heroRect.top < window.innerHeight;
-
     const heroVisibilityObserver = new IntersectionObserver((entries) => {
       const entry = entries[0];
       isHeroInViewport = !!(entry && entry.isIntersecting);
