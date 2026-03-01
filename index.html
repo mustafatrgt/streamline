@@ -28,6 +28,29 @@
         imagesrcset="img/hero-poster-mobile.avif?v=806c1a2621 767w, img/hero-poster-desktop.avif?v=f16dabf911 1920w"
         imagesizes="100vw" />
     <style>
+        @font-face {
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: optional;
+            src: url("assets/fonts/montserrat-latin.woff2") format("woff2");
+        }
+
+        @font-face {
+            font-family: Syne;
+            font-style: normal;
+            font-weight: 400 800;
+            font-display: optional;
+            src: url("assets/fonts/syne-latin.woff2") format("woff2");
+        }
+
+        :root {
+            --primary: #d4af37;
+            --bg-dark: #050505;
+            --text-light: #f8fafc;
+            --text-muted: #cbd5e1;
+        }
+
         html,
         body {
             margin: 0;
@@ -35,13 +58,30 @@
             width: 100%;
             min-height: 100%;
             overflow-x: hidden;
-            background: #050505;
-            color: #f8fafc;
+            background: var(--bg-dark);
+            color: var(--text-light);
             font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .is-hidden {
             display: none !important;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #8a6d3b, #d4af37, #f9e27d, #d4af37, #8a6d3b);
+            background-size: 200% auto;
+        }
+
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         header {
@@ -51,6 +91,7 @@
             width: 100%;
             z-index: 50;
             background: rgba(5, 5, 5, 0.75);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
@@ -65,9 +106,53 @@
             justify-content: space-between;
         }
 
+        #header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #header-brand svg {
+            color: var(--primary);
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: currentColor;
+        }
+
+        #header-brand h1 {
+            margin: 0;
+            font-family: Syne, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            font-size: 1.125rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
         #desktop-nav,
         #desktop-quote-btn {
             display: none;
+        }
+
+        #desktop-nav a {
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        #desktop-quote-btn {
+            color: #000;
+            border: 0;
+            padding: 0.625rem 1.5rem;
+            border-radius: 1rem;
+            font-family: Syne, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
 
         #mobile-menu-btn {
@@ -75,34 +160,43 @@
             align-items: center;
             justify-content: center;
             color: #fff;
+            background: transparent;
+            border: 0;
+            padding: 0;
         }
 
-        @media (min-width: 1024px) {
-            #desktop-nav {
-                display: flex;
-            }
-
-            #mobile-menu-btn {
-                display: none;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            #desktop-quote-btn {
-                display: block;
-            }
+        #mobile-menu-btn svg {
+            width: 1.875rem;
+            height: 1.875rem;
+            fill: currentColor;
         }
 
         #hero {
             position: relative;
             min-height: 100vh;
+            min-height: 100svh;
+            min-height: 100dvh;
             padding-top: 5rem;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        #hero-video-poster,
+        #hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(5, 5, 5, 0.8), rgba(5, 5, 5, 0.4), #050505);
+        }
+
+        #hero-video-poster {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            overflow: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
         #hero-video-poster img {
             position: absolute;
             inset: 0;
@@ -115,78 +209,172 @@
         .hero-video-wrap {
             position: absolute;
             inset: 0;
+            z-index: 4;
+            overflow: hidden;
         }
 
         .hero-video-wrap video {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
         }
+
+        #hero-content {
+            position: relative;
+            z-index: 20;
+            text-align: center;
+            max-width: 56rem;
+            padding: 0 1.5rem;
+        }
+
+        #hero-kicker {
+            margin: 0 0 1.5rem;
+            color: var(--primary);
+            font-family: Syne, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+        }
+
+        #hero-title {
+            margin: 0 0 2rem;
+            color: #fff;
+            font-family: Syne, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            font-size: 2.25rem;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+        }
+
+        #hero-subtitle {
+            margin: 0 auto 2.5rem;
+            max-width: 42rem;
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            line-height: 1.625;
+            font-weight: 300;
+            letter-spacing: 0.025em;
+        }
+
+        #hero-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        #hero-primary-btn,
+        #hero-secondary-btn {
+            width: 100%;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            font-family: Syne, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        #hero-primary-btn {
+            color: #000;
+            border: 0;
+        }
+
+        #hero-secondary-btn {
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        @media (min-width: 640px) {
+            #hero-cta {
+                flex-direction: row;
+            }
+
+            #hero-primary-btn,
+            #hero-secondary-btn {
+                width: auto;
+                padding-left: 2.5rem;
+                padding-right: 2.5rem;
+                letter-spacing: 0.15em;
+            }
+
+            #hero-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            #header-brand {
+                gap: 0.75rem;
+            }
+
+            #header-brand svg {
+                width: 1.875rem;
+                height: 1.875rem;
+            }
+
+            #header-brand h1 {
+                font-size: 1.25rem;
+            }
+
+            #hero-title {
+                font-size: 6rem;
+            }
+
+            #hero-subtitle {
+                font-size: 1.25rem;
+            }
+
+            #hero-primary-btn,
+            #hero-secondary-btn {
+                padding-top: 1.25rem;
+                padding-bottom: 1.25rem;
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            #desktop-nav {
+                display: flex;
+                align-items: center;
+                gap: 2.5rem;
+            }
+
+            #mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            #desktop-quote-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="assets/css/app.min.css?v=535c828247" />
+    <link rel="preload" as="style" href="assets/css/app.min.css?v=62b66a0fb6" />
+    <link rel="stylesheet" href="assets/css/app.min.css?v=62b66a0fb6" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="assets/css/app.min.css?v=62b66a0fb6" /></noscript>
     <script src="assets/js/main.min.js?v=e6ab9f9685" defer></script>
 </head>
 
 <body
     class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased tracking-wide overflow-x-hidden">
     <div id="mouse-spotlight" class="mouse-spotlight" aria-hidden="true"></div>
-    <!-- Embed SVG Sprite inline to avoid CORS issues on local file:// -->
-    <div id="svg-sprite-container" class="is-hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="is-hidden">
-  <symbol id="architecture" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M6.36 18.78 6.61 21l1.62-1.54 2.77-7.6c-.68-.17-1.28-.51-1.77-.98l-2.87 7.9zm8.41-7.9c-.49.47-1.1.81-1.77.98l2.77 7.6L17.39 21l.26-2.22-2.88-7.9zM15 8c0-1.3-.84-2.4-2-2.82V3h-2v2.18C9.84 5.6 9 6.7 9 8c0 1.66 1.34 3 3 3s3-1.34 3-3zm-3 1c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
-  </symbol>
-  <symbol id="check_circle" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
-  </symbol>
-  <symbol id="close" viewBox="0 -960 960 960">
-    <path fill="currentColor" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-  </symbol>
-  <symbol id="construction" viewBox="0 0 24 24">
-    <path fill="currentColor" d="m13.783 15.172 2.121-2.121 5.996 5.996-2.121 2.121zM17.5 10c1.93 0 3.5-1.57 3.5-3.5 0-.58-.16-1.12-.41-1.6l-2.7 2.7-1.49-1.49 2.7-2.7c-.48-.25-1.02-.41-1.6-.41C15.57 3 14 4.57 14 6.5c0 .41.08.8.21 1.16l-1.85 1.85-1.78-1.78.71-.71-1.41-1.41L12 3.49a3 3 0 0 0-4.24 0L4.22 7.03l1.41 1.41H2.81l-.71.71 3.54 3.54.71-.71V9.15l1.41 1.41.71-.71 1.78 1.78-7.41 7.41 2.12 2.12L16.34 9.79c.36.13.75.21 1.16.21z"/>
-  </symbol>
-  <symbol id="description" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
-  </symbol>
-  <symbol id="fence" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M21 12v-2h-2V7l-3-3-2 2-2-2-2 2-2-2-3 3v3H3v2h2v2H3v2h2v4h14v-4h2v-2h-2v-2h2zm-5-5.17 1 1V10h-2V7.83l.41-.41.59-.59zm-4 0 .59.59.41.41V10h-2V7.83l.41-.41.59-.59zM11 14v-2h2v2h-2zm2 2v2h-2v-2h2zM7 7.83l1-1 .59.59.41.41V10H7V7.83zM7 12h2v2H7v-2zm0 4h2v2H7v-2zm10 2h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
-  </symbol>
-  <symbol id="groups" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58A2.01 2.01 0 0 0 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85A6.95 6.95 0 0 0 20 14c-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zm-7.76-2.78c-1.17-.52-2.61-.9-4.24-.9-1.63 0-3.07.39-4.24.9A2.988 2.988 0 0 0 6 16.39V18h12v-1.61c0-1.18-.68-2.26-1.76-2.74zM8.07 16c.09-.23.13-.39.91-.69.97-.38 1.99-.56 3.02-.56s2.05.18 3.02.56c.77.3.81.46.91.69H8.07zM12 8c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1m0-2c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-  </symbol>
-  <symbol id="hardware" viewBox="0 0 24 24">
-    <path fill="currentColor" d="m18 3-3 3V3H9C6.24 3 4 5.24 4 8h5v12c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8l3 3h2V3h-2zm-5 16h-2v-6h2v6zm-2-8V6H6.77C7.32 5.39 8.11 5 9 5h4v6h-2z"/>
-  </symbol>
-  <symbol id="mail" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 4.99L4 6h16zm0 12H4V8l8 5 8-5v10z"/>
-  </symbol>
-  <symbol id="menu" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-  </symbol>
-  <symbol id="pool" viewBox="0 0 24 24">
-    <path fill="currentColor" d="m10 8-3.25 3.25c.31.12.56.27.77.39.37.23.59.36 1.15.36s.78-.13 1.15-.36c.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36.55 0 .78-.13 1.15-.36.12-.07.26-.15.41-.23L10.48 5C8.93 3.45 7.5 2.99 5 3v2.5c1.82-.01 2.89.39 4 1.5l1 1zm12 8.5h-.02.02zm-16.65-1c.55 0 .78.14 1.15.36.45.27 1.07.64 2.18.64s1.73-.37 2.18-.64c.37-.23.59-.36 1.15-.36.55 0 .78.14 1.15.36.45.27 1.07.64 2.18.64s1.73-.37 2.18-.64c.37-.23.59-.36 1.15-.36.55 0 .78.14 1.15.36.45.27 1.06.63 2.16.64v-2c-.55 0-.78-.14-1.15-.36-.45-.27-1.07-.64-2.18-.64s-1.73.37-2.18.64c-.37.23-.6.36-1.15.36s-.78-.14-1.15-.36c-.45-.27-1.07-.64-2.18-.64s-1.73.37-2.18.64c-.37.23-.59.36-1.15.36-.55 0-.78-.14-1.15-.36-.45-.27-1.07-.64-2.18-.64s-1.73.37-2.18.64c-.37.23-.59.36-1.15.36v2c1.11 0 1.73-.37 2.2-.64.37-.23.6-.36 1.15-.36zM18.67 18c-1.11 0-1.73.37-2.18.64-.37.23-.6.36-1.15.36-.55 0-.78-.14-1.15-.36-.45-.27-1.07-.64-2.18-.64s-1.73.37-2.19.64c-.37.23-.59.36-1.15.36s-.78-.13-1.15-.36c-.45-.27-1.07-.64-2.18-.64s-1.73.37-2.19.64c-.37.23-.59.36-1.15.36v2c1.11 0 1.73-.37 2.19-.64.37-.23.6-.36 1.15-.36.55 0 .78.13 1.15.36.45.27 1.07.64 2.18.64s1.73-.37 2.19-.64c.37-.23.59-.36 1.15-.36.55 0 .78.14 1.15.36.45.27 1.07.64 2.18.64s1.72-.37 2.18-.64c.37-.23.59-.36 1.15-.36.55 0 .78.14 1.15.36.45.27 1.07.64 2.18.64v-2c-.56 0-.78-.13-1.15-.36-.45-.27-1.07-.64-2.18-.64z"/><circle cx="16.5" cy="5.5" r="2.5"/>
-  </symbol>
-  <symbol id="precision_manufacturing" viewBox="0 0 24 24">
-    <path fill="currentColor" d="m19.93 8.35-3.6 1.68L14 7.7V6.3l2.33-2.33 3.6 1.68c.38.18.82.01 1-.36.18-.38.01-.82-.36-1l-3.92-1.83a.993.993 0 0 0-1.13.2L13.78 4.4A.975.975 0 0 0 13 4c-.55 0-1 .45-1 1v1H8.82C8.4 4.84 7.3 4 6 4 4.34 4 3 5.34 3 7c0 1.1.6 2.05 1.48 2.58L7.08 18H6c-1.1 0-2 .9-2 2v1h13v-1c0-1.1-.9-2-2-2h-1.62L8.41 8.77c.17-.24.31-.49.41-.77H12v1c0 .55.45 1 1 1 .32 0 .6-.16.78-.4l1.74 1.74c.3.3.75.38 1.13.2l3.92-1.83c.38-.18.54-.62.36-1a.753.753 0 0 0-1-.36zM6 8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5.11 10H9.17l-2.46-8h.1l4.3 8z"/>
-  </symbol>
-  <symbol id="request_quote" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v4h5v12H6zm5-1h2v-1h1c.55 0 1-.45 1-1v-3c0-.55-.45-1-1-1h-3v-1h4v-2h-2V9h-2v1h-1c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1h3v1H9v2h2v1z"/>
-  </symbol>
-  <symbol id="share" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
-  </symbol>
-  <symbol id="star" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"/>
-  </symbol>
-</svg>
-    </div>
-
     <header class="fixed top-0 w-full z-50 glass-morphism border-b border-white/5">
         <div id="header-main" class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div id="header-brand" class="flex items-center gap-2 md:gap-3">
                 <svg class="text-primary text-2xl md:text-3xl w-[1em] h-[1em] inline-block fill-current">
-                    <use href="#fence"></use>
+                    <use href="img/sprite.svg?v=3486c77e77#fence"></use>
                 </svg>
                 <h1 class="text-lg md:text-xl font-black tracking-[0.2em] uppercase font-accent whitespace-nowrap">
                     Streamline</h1>
@@ -211,7 +399,7 @@
                     aria-controls="mobile-menu" aria-expanded="false"
                     class="lg:hidden text-white hover:text-primary transition-colors focus:outline-none">
                     <svg class="text-3xl w-[1em] h-[1em] inline-block fill-current">
-                        <use href="#menu"></use>
+                        <use href="img/sprite.svg?v=3486c77e77#menu"></use>
                     </svg>
                 </button>
             </div>
@@ -220,7 +408,7 @@
     <main>
         <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20">
             <div class="absolute inset-0 z-0 overflow-hidden">
-                <div
+                <div id="hero-overlay"
                     class="absolute inset-0 bg-gradient-to-b from-background-dark/80 via-background-dark/40 to-background-dark z-10">
                 </div>
                 <!-- Poster: first frame until video loads -->
@@ -228,7 +416,7 @@
                     <img class="w-full h-full object-cover object-center" alt="Hero background"
                         src="img/hero-poster-desktop.avif?v=f16dabf911"
                         srcset="img/hero-poster-mobile.avif?v=806c1a2621 767w, img/hero-poster-desktop.avif?v=f16dabf911 1920w"
-                        sizes="100vw" width="640" height="640" loading="eager" fetchpriority="high" />
+                        sizes="100vw" width="1920" height="1080" loading="eager" fetchpriority="high" />
                 </div>
                 <!-- Desktop: local video (loop, no controls) -->
                 <div class="hero-video-wrap hidden md:block z-[4]">
@@ -249,22 +437,22 @@
                     </video>
                 </div>
             </div>
-            <div class="relative z-20 text-center max-w-4xl px-6">
-                <h2 class="text-primary font-bold tracking-[0.4em] uppercase mb-6 text-sm font-accent">2026 Luxury
+            <div id="hero-content" class="relative z-20 text-center max-w-4xl px-6">
+                <h2 id="hero-kicker" class="text-primary font-bold tracking-[0.4em] uppercase mb-6 text-sm font-accent">2026 Luxury
                     Collection</h2>
-                <h1
+                <h1 id="hero-title"
                     class="text-[2.25rem] sm:text-5xl md:text-8xl font-black text-white leading-[1.1] tracking-tighter mb-8 gold-glow uppercase font-accent">
                     BUILT STRONGER.<br />BUILT <span class="gold-text-gradient">CANADIAN.</span>
                 </h1>
-                <p
+                <p id="hero-subtitle"
                     class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
                     Premium wood fencing and gates – engineered to resist sagging, built to finish fast and look sharp.
                 </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button
+                <div id="hero-cta" class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button id="hero-primary-btn"
                         class="w-full sm:w-auto px-6 md:px-10 py-4 md:py-5 gold-gradient text-black font-black rounded-xl text-sm md:text-lg hover:scale-105 transition-transform shadow-2xl shadow-primary/20 uppercase tracking-wider md:tracking-[0.15em] hover:bg-[length:200%_auto] transition-all duration-500 font-accent">Start
                         Your Quote</button>
-                    <button
+                    <button id="hero-secondary-btn"
                         class="w-full sm:w-auto px-6 md:px-10 py-4 md:py-5 glass-morphism text-white font-bold rounded-xl text-sm md:text-lg hover:bg-white/10 transition-all border border-white/20 tracking-wider md:tracking-[0.15em] font-accent">See
                         examples &gt;</button>
                 </div>
@@ -286,7 +474,7 @@
                         <div
                             class="why-icon-chip w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center mb-8 border border-primary/20 group-hover:scale-110 transition-transform backdrop-blur-sm group-hover:bg-white/10 shadow-[0_0_15px_rgba(212,175,55,0.1)]">
                             <svg class="text-primary text-4xl w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#precision_manufacturing"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#precision_manufacturing"></use>
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold mb-4 font-accent tracking-wide uppercase">Prefabricated Fence
@@ -302,7 +490,7 @@
                         <div
                             class="why-icon-chip w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center mb-8 border border-primary/20 group-hover:scale-110 transition-transform backdrop-blur-sm group-hover:bg-white/10 shadow-[0_0_15px_rgba(212,175,55,0.1)]">
                             <svg class="text-primary text-4xl w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#pool"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#pool"></use>
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold mb-4 font-accent tracking-wide uppercase">Pool Code Compliant</h3>
@@ -317,7 +505,7 @@
                         <div
                             class="why-icon-chip w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center mb-8 border border-primary/20 group-hover:scale-110 transition-transform backdrop-blur-sm group-hover:bg-white/10 shadow-[0_0_15px_rgba(212,175,55,0.1)]">
                             <svg class="text-primary text-4xl w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#groups"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#groups"></use>
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold mb-4 font-accent tracking-wide uppercase">SHARED FENCE PROJECTS –
@@ -345,7 +533,7 @@
                             class="w-24 h-24 rounded-2xl glass-card-premium flex flex-col items-center justify-center mb-6 relative group-hover:border-primary/50 transition-all shadow-xl step-icon-container">
                             <div class="animated-gradient-border"></div>
                             <svg class="text-primary text-5xl mb-1 w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#request_quote"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#request_quote"></use>
                             </svg>
                             <span
                                 class="absolute -top-4 -right-4 w-8 h-8 rounded-full gold-gradient text-black flex items-center justify-center font-black text-sm border-2 border-background-dark shadow-lg z-30 font-accent">1</span>
@@ -358,7 +546,7 @@
                             class="w-24 h-24 rounded-2xl glass-card-premium flex flex-col items-center justify-center mb-6 relative group-hover:border-primary/50 transition-all shadow-xl step-icon-container">
                             <div class="animated-gradient-border"></div>
                             <svg class="text-primary text-5xl mb-1 w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#architecture"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#architecture"></use>
                             </svg>
                             <span
                                 class="absolute -top-4 -right-4 w-8 h-8 rounded-full gold-gradient text-black flex items-center justify-center font-black text-sm border-2 border-background-dark shadow-lg z-30 font-accent">2</span>
@@ -371,7 +559,7 @@
                             class="w-24 h-24 rounded-2xl glass-card-premium flex flex-col items-center justify-center mb-6 relative group-hover:border-primary/50 transition-all shadow-xl step-icon-container">
                             <div class="animated-gradient-border"></div>
                             <svg class="text-primary text-5xl mb-1 w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#description"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#description"></use>
                             </svg>
                             <span
                                 class="absolute -top-4 -right-4 w-8 h-8 rounded-full gold-gradient text-black flex items-center justify-center font-black text-sm border-2 border-background-dark shadow-lg z-30 font-accent">3</span>
@@ -384,7 +572,7 @@
                             class="w-24 h-24 rounded-2xl glass-card-premium flex flex-col items-center justify-center mb-6 relative group-hover:border-primary/50 transition-all shadow-xl step-icon-container">
                             <div class="animated-gradient-border"></div>
                             <svg class="text-primary text-5xl mb-1 w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#construction"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#construction"></use>
                             </svg>
                             <span
                                 class="absolute -top-4 -right-4 w-8 h-8 rounded-full gold-gradient text-black flex items-center justify-center font-black text-sm border-2 border-background-dark shadow-lg z-30 font-accent">4</span>
@@ -436,7 +624,7 @@
                     <div class="gate-feature-badge gate-badge-header absolute -top-6 -left-12 z-30 glass-morphism p-4 rounded-2xl flex items-center gap-4 animate-float-subtle anim-delay-neg-1s border border-primary/20 shadow-2xl shadow-black/50">
                         <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
                             <svg class="text-primary text-2xl w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#architecture"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#architecture"></use>
                             </svg>
                         </div>
                         <div>
@@ -449,7 +637,7 @@
                     <div class="gate-feature-badge gate-badge-safety absolute top-1/2 -right-16 z-30 glass-morphism p-4 rounded-2xl flex items-center gap-4 animate-float-subtle anim-delay-neg-3s border border-primary/20 shadow-2xl shadow-black/50">
                         <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
                             <svg class="text-primary text-2xl w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#pool"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#pool"></use>
                             </svg>
                         </div>
                         <div>
@@ -462,7 +650,7 @@
                     <div class="gate-feature-badge gate-badge-hardware absolute -bottom-8 -left-4 z-30 glass-morphism p-4 rounded-2xl flex items-center gap-4 animate-float-subtle anim-delay-neg-5s border border-primary/20 shadow-2xl shadow-black/50">
                         <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
                             <svg class="text-primary text-2xl w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#hardware"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#hardware"></use>
                             </svg>
                         </div>
                         <div>
@@ -490,27 +678,27 @@
                     <ul class="space-y-4">
                         <li class="flex items-center gap-4"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="font-medium tracking-wide">2x8 reinforced cap beam header</span></li>
                         <li class="flex items-center gap-4"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="font-medium tracking-wide">4x4 compression block support</span></li>
                         <li class="flex items-center gap-4"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="font-medium tracking-wide">Eliminates long-term sagging</span></li>
                         <li class="flex items-center gap-4"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="font-medium tracking-wide">Maintains clean post alignment</span></li>
                         <li class="flex items-center gap-4"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="font-medium tracking-wide">Heavy-duty hardware</span></li>
                         <li class="flex items-center gap-4"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="font-medium tracking-wide">Pool code compliant</span></li>
                     </ul>
                     <button
@@ -547,23 +735,23 @@
                     <ul class="space-y-4 reveal-left delay-200">
                         <li class="flex items-center gap-3 text-slate-200"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="tracking-wide">Mutual interest required first</span></li>
                         <li class="flex items-center gap-3 text-slate-200"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="tracking-wide">Independent contracts</span></li>
                         <li class="flex items-center gap-3 text-slate-200"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="tracking-wide">Separate payment handling</span></li>
                         <li class="flex items-center gap-3 text-slate-200"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="tracking-wide">Transparent cost allocation</span></li>
                         <li class="flex items-center gap-3 text-slate-200"><svg
                                 class="text-primary w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#check_circle"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#check_circle"></use>
                             </svg><span class="tracking-wide">One coordinated build</span></li>
                     </ul>
                     <div class="p-6 glass-morphism rounded-2xl border-primary/10 reveal-right delay-300">
@@ -707,19 +895,19 @@
                         <span class="text-slate-400 font-bold tracking-[0.2em] text-sm uppercase">GOOGLE REVIEWS</span>
                         <div class="flex text-primary">
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                         </div>
                     </div>
@@ -728,15 +916,15 @@
                     <div class="p-8 glass-morphism rounded-2xl reveal-scale delay-100">
                         <div class="flex text-primary mb-4 text-sm">
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                         </div>
                         <p class="text-slate-300 italic mb-6 tracking-wide">"Exceptional quality and attention to
@@ -746,15 +934,15 @@
                     <div class="p-8 glass-morphism rounded-2xl reveal-scale delay-200">
                         <div class="flex text-primary mb-4 text-sm">
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                         </div>
                         <p class="text-slate-300 italic mb-6 tracking-wide">"The shared fence process was seamless. They
@@ -764,15 +952,15 @@
                     <div class="p-8 glass-morphism rounded-2xl reveal-scale delay-300">
                         <div class="flex text-primary mb-4 text-sm">
                             <svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg><svg class="w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#star"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#star"></use>
                             </svg>
                         </div>
                         <p class="text-slate-300 italic mb-6 tracking-wide">"Fast, professional, and built like a tank.
@@ -787,7 +975,7 @@
                 <div class="col-span-1 md:col-span-2 reveal-left">
                     <div class="flex items-center gap-3 mb-6">
                         <svg class="text-primary text-3xl w-[1em] h-[1em] inline-block fill-current">
-                            <use href="#fence"></use>
+                            <use href="img/sprite.svg?v=3486c77e77#fence"></use>
                         </svg>
                         <h2 class="text-xl font-black tracking-[0.25em] uppercase font-accent">Streamline</h2>
                     </div>
@@ -799,14 +987,14 @@
                             href="#" aria-label="Visit our social page"
                             title="Visit our social page">
                             <svg class="text-sm w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#share"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#share"></use>
                             </svg>
                         </a>
                         <a class="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary hover:text-background-dark transition-all"
                             href="#" aria-label="Send us an email"
                             title="Send us an email">
                             <svg class="text-sm w-[1em] h-[1em] inline-block fill-current">
-                                <use href="#mail"></use>
+                                <use href="img/sprite.svg?v=3486c77e77#mail"></use>
                             </svg>
                         </a>
                     </div>
@@ -854,7 +1042,7 @@
         <button id="close-menu-btn" type="button" aria-label="Close navigation menu"
             class="absolute top-6 right-6 text-white hover:text-primary transition-colors focus:outline-none">
             <svg class="text-3xl w-[1em] h-[1em] inline-block fill-current">
-                <use href="#close"></use>
+                <use href="img/sprite.svg?v=3486c77e77#close"></use>
             </svg>
         </button>
         <nav class="flex flex-col gap-8 text-center mt-10">
