@@ -1474,11 +1474,11 @@ input:where([type='file']):focus {
 }
 
 .font-accent {
-  font-family: Syne, sans-serif;
+  font-family: Syne, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 }
 
 .font-display {
-  font-family: Montserrat, sans-serif;
+  font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 }
 
 .text-2xl {
