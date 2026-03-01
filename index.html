@@ -8,9 +8,13 @@
     <title>Streamline Fencing | Luxury Canadian Outdoor Solutions</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=9c4c2c7606" />
     <link rel="icon" href="favicon.ico?v=87afccc19a" sizes="any" />
-    <link href="assets/css/fonts.min.css?v=87a7b5f1c3" rel="stylesheet" />
-    <link href="assets/css/tailwind.min.css?v=f65ff71bfc" rel="stylesheet" />
-    <link href="assets/css/style.min.css?v=e7aa3b09c7" rel="stylesheet" />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/montserrat-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/syne-latin.woff2" crossorigin />
+    <link rel="preload" as="image" href="img/hero-poster-mobile.avif?v=806c1a2621" media="(max-width: 767px)" />
+    <link rel="preload" as="image" href="img/hero-poster-desktop.avif?v=f16dabf911" media="(min-width: 768px)" />
+    <link rel="preload" as="style" href="assets/css/app.min.css?v=1456f1b360" />
+    <link rel="stylesheet" href="assets/css/app.min.css?v=1456f1b360" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="assets/css/app.min.css?v=1456f1b360" /></noscript>
     <script src="assets/js/main.min.js?v=c8da8101ce" defer></script>
 </head>
 
@@ -111,7 +115,7 @@
                 <!-- Poster: first frame until video loads -->
                 <div id="hero-video-poster" class="absolute inset-0 z-[5]">
                     <picture>
-                        <source media="(max-width: 767px)" srcset="img/hero-poster-mobile.avif?v=b5fb9ed9cd" />
+                        <source media="(max-width: 767px)" srcset="img/hero-poster-mobile.avif?v=806c1a2621" />
                         <img class="w-full h-full object-cover object-center" alt="Hero background"
                             src="img/hero-poster-desktop.avif?v=f16dabf911" loading="eager" fetchpriority="high" />
                     </picture>

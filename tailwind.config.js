@@ -16,8 +16,8 @@ module.exports = {
         obsidian: '#050505',
       },
       fontFamily: {
-        display: ['Montserrat', 'sans-serif'],
-        accent: ['Syne', 'sans-serif'],
+        display: ['Montserrat', 'system-ui', '-apple-system', '"Segoe UI"', 'Arial', 'sans-serif'],
+        accent: ['Syne', 'system-ui', '-apple-system', '"Segoe UI"', 'Arial', 'sans-serif'],
       },
       borderRadius: {
         DEFAULT: '0.5rem',

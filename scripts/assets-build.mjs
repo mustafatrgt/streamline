@@ -18,6 +18,7 @@ const cssTasks = [
   ['assets/css/tailwind.css', 'assets/css/tailwind.min.css'],
   ['assets/css/style.css', 'assets/css/style.min.css'],
 ];
+const combinedCssOut = 'assets/css/app.min.css';
 
 const jsSource = 'assets/js/main.js';
 const jsMin = 'assets/js/main.min.js';
@@ -25,9 +26,13 @@ const jsModule = 'assets/js/main.mjs';
 const jsMinModule = 'assets/js/main.min.mjs';
 
 const canonicalRewrites = new Map([
-  ['assets/css/fonts.css', 'assets/css/fonts.min.css'],
-  ['assets/css/tailwind.css', 'assets/css/tailwind.min.css'],
-  ['assets/css/style.css', 'assets/css/style.min.css'],
+  ['assets/css/fonts.css', combinedCssOut],
+  ['assets/css/fonts.min.css', combinedCssOut],
+  ['assets/css/tailwind.css', combinedCssOut],
+  ['assets/css/tailwind.min.css', combinedCssOut],
+  ['assets/css/style.css', combinedCssOut],
+  ['assets/css/style.min.css', combinedCssOut],
+  ['assets/css/app.css', combinedCssOut],
   ['assets/js/main.js', 'assets/js/main.min.js'],
 ]);
 
@@ -201,6 +206,16 @@ async function minifyJs(inputRel, outputRel, format = 'iife') {
   await fs.writeFile(outputPath, result.code, 'utf8');
 }
 
+async function buildCombinedCss() {
+  const minifiedChunks = [];
+  for (const [, outputRel] of cssTasks) {
+    const css = await fs.readFile(path.join(ROOT, outputRel), 'utf8');
+    minifiedChunks.push(css);
+  }
+  const result = await transform(minifiedChunks.join('\n'), { loader: 'css', minify: true });
+  await fs.writeFile(path.join(ROOT, combinedCssOut), result.code, 'utf8');
+}
+
 async function runTailwindBuild() {
   const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
   await execFileAsync(npxCmd, [
@@ -219,6 +234,7 @@ async function main() {
   for (const [inputRel, outputRel] of cssTasks) {
     await minifyCss(inputRel, outputRel);
   }
+  await buildCombinedCss();
 
   console.log('[assets] Minifying JS...');
   await minifyJs(jsSource, jsMin, 'iife');
