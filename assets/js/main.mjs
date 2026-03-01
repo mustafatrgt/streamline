@@ -228,11 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const poster = document.getElementById('hero-video-poster');
+  const heroSection = document.getElementById('hero');
   const videoDesktop = document.getElementById('hero-video-desktop');
   const videoMobile = document.getElementById('hero-video-mobile');
   const desktopQuery = window.matchMedia('(min-width: 768px)');
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const reducedDataMode = !!(connection && (connection.saveData || ['slow-2g', '2g', '3g'].includes(connection.effectiveType)));
+  let isHeroInViewport = true;
+  let isDocumentVisible = document.visibilityState !== 'hidden';
 
   function hidePoster() {
     if (!poster) return;
@@ -265,6 +268,16 @@ document.addEventListener('DOMContentLoaded', () => {
     videoEl.dataset.loaded = 'true';
   }
 
+  function playHeroVideo(videoEl) {
+    if (!videoEl) return;
+    const playPromise = videoEl.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        // Autoplay can be blocked by browser policies on some devices.
+      });
+    }
+  }
+
   function unloadHeroVideo(videoEl) {
     if (!videoEl || videoEl.dataset.loaded !== 'true') return;
     videoEl.pause();
@@ -274,9 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     videoEl.dataset.loaded = 'false';
   }
 
-  function syncHeroVideoForViewport() {
-    if (reducedDataMode) return;
-
+  function getHeroVideosForViewport() {
     const viewportWidths = [
       window.innerWidth,
       document.documentElement ? document.documentElement.clientWidth : 0,
@@ -289,7 +300,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeVideo = desktopActive ? videoDesktop : videoMobile;
     const inactiveVideo = desktopActive ? videoMobile : videoDesktop;
 
+    return { activeVideo, inactiveVideo };
+  }
+
+  function syncHeroVideoForViewport() {
+    if (reducedDataMode) return;
+
+    const { activeVideo, inactiveVideo } = getHeroVideosForViewport();
     unloadHeroVideo(inactiveVideo);
+
+    if (!isHeroInViewport || !isDocumentVisible) {
+      if (activeVideo && activeVideo.dataset.loaded === 'true') {
+        activeVideo.pause();
+      }
+      return;
+    }
+
+    if (activeVideo && activeVideo.dataset.loaded === 'true') {
+      playHeroVideo(activeVideo);
+      return;
+    }
+
     loadHeroVideo(activeVideo);
   }
 
@@ -306,6 +337,27 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     window.addEventListener('load', scheduleHeroVideo, { once: true });
   }
+
+  if (heroSection) {
+    const heroRect = heroSection.getBoundingClientRect();
+    isHeroInViewport = heroRect.bottom > 0 && heroRect.top < window.innerHeight;
+
+    const heroVisibilityObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      isHeroInViewport = !!(entry && entry.isIntersecting);
+      syncHeroVideoForViewport();
+    }, {
+      root: null,
+      threshold: 0.05,
+    });
+
+    heroVisibilityObserver.observe(heroSection);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    isDocumentVisible = document.visibilityState !== 'hidden';
+    syncHeroVideoForViewport();
+  });
 
   if (desktopQuery.addEventListener) {
     desktopQuery.addEventListener('change', syncHeroVideoForViewport);
