@@ -8,24 +8,6 @@ body {
     position: relative;
 }
 
-html.header-compact #desktop-nav {
-    display: none !important;
-}
-
-html.header-compact #desktop-quote-btn {
-    display: none !important;
-}
-
-html.header-compact #mobile-menu-btn {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-html.header-compact #header-actions {
-    gap: 0;
-}
-
 .glass-morphism {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(12px);

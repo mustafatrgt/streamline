@@ -10,10 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeMenuBtn = document.getElementById('close-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
   const mobileLinks = document.querySelectorAll('.mobile-link');
-  const headerMain = document.getElementById('header-main');
-  const headerBrand = document.getElementById('header-brand');
-  const desktopNav = document.getElementById('desktop-nav');
-  const headerActions = document.getElementById('header-actions');
 
   function openMenu() {
     if (!mobileMenu) return;
@@ -35,45 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileLinks.forEach((link) => {
     link.addEventListener('click', closeMenu);
   });
-
-  function isDesktopNavWrapped() {
-    if (!desktopNav) return false;
-    const links = desktopNav.querySelectorAll('a');
-    if (links.length < 2) return false;
-    const top = links[0].offsetTop;
-    return Array.from(links).some((link) => Math.abs(link.offsetTop - top) > 1);
-  }
-
-  function updateHeaderCompressionMode() {
-    const root = document.documentElement;
-    root.classList.remove('header-compact');
-
-    if (!headerMain || !headerBrand || !desktopNav || !headerActions) return;
-    if (!window.matchMedia('(min-width: 768px)').matches) return;
-
-    const brandWidth = Math.ceil(headerBrand.getBoundingClientRect().width);
-    const navWidth = Math.ceil(desktopNav.scrollWidth);
-    const actionsWidth = Math.ceil(headerActions.getBoundingClientRect().width);
-    const containerWidth = Math.floor(headerMain.getBoundingClientRect().width);
-    const needsCompact = isDesktopNavWrapped() || (brandWidth + navWidth + actionsWidth + 56 > containerWidth);
-
-    if (needsCompact) root.classList.add('header-compact');
-  }
-
-  let headerResizeRaf = 0;
-  function scheduleHeaderCompressionUpdate() {
-    if (headerResizeRaf) cancelAnimationFrame(headerResizeRaf);
-    headerResizeRaf = requestAnimationFrame(() => {
-      updateHeaderCompressionMode();
-    });
-  }
-
-  scheduleHeaderCompressionUpdate();
-  window.addEventListener('resize', scheduleHeaderCompressionUpdate, { passive: true });
-  window.addEventListener('orientationchange', scheduleHeaderCompressionUpdate);
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(scheduleHeaderCompressionUpdate);
-  }
 
   const SMOOTH_SCROLL_DURATION = 100;
   function smoothScrollTo(targetY) {
@@ -106,12 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const hero = document.getElementById('hero');
   const scrollToTopBtn = document.getElementById('scroll-to-top');
   if (hero && scrollToTopBtn) {
+    let heroBottom = 0;
+    function recalcHeroBottom() {
+      heroBottom = hero.getBoundingClientRect().top + window.scrollY + hero.offsetHeight;
+    }
+
     function updateScrollToTopVisibility() {
-      const heroBottom = hero.offsetTop + hero.offsetHeight;
       scrollToTopBtn.setAttribute('aria-hidden', window.scrollY < heroBottom - 50 ? 'true' : 'false');
     }
 
+    recalcHeroBottom();
     window.addEventListener('scroll', updateScrollToTopVisibility, { passive: true });
+    window.addEventListener('resize', recalcHeroBottom, { passive: true });
+    window.addEventListener('orientationchange', recalcHeroBottom);
     updateScrollToTopVisibility();
     scrollToTopBtn.addEventListener('click', () => {
       smoothScrollTo(0);
