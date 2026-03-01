@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const videoMobile = document.getElementById('hero-video-mobile');
   const desktopQuery = window.matchMedia('(min-width: 768px)');
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  const reducedDataMode = !!(connection && (connection.saveData || ['slow-2g', '2g', '3g'].includes(connection.effectiveType)));
+  const reducedDataMode = !!(connection && connection.saveData);
   let isHeroInViewport = true;
   let isDocumentVisible = document.visibilityState !== 'hidden';
 
@@ -246,29 +246,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   }
 
-  function loadHeroVideo(videoEl) {
-    if (!videoEl || videoEl.dataset.loaded === 'true') return;
-    const src = videoEl.dataset.src;
-    if (!src) return;
+  function resolveHeroVideoSource(videoEl) {
+    if (!videoEl) return '';
 
-    videoEl.addEventListener('loadeddata', () => {
-      videoEl.classList.add('opacity-100');
-      hidePoster();
-    }, { once: true });
+    const webmSrc = videoEl.dataset.srcWebm || videoEl.dataset.src || '';
+    const mp4Src = videoEl.dataset.srcMp4 || '';
 
-    videoEl.src = src;
-    videoEl.load();
-    const playPromise = videoEl.play();
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(() => {
-        // Autoplay can be blocked by browser policies on some devices.
-      });
-    }
+    const canPlayWebm = !!(
+      videoEl.canPlayType('video/webm; codecs="vp9,opus"')
+      || videoEl.canPlayType('video/webm; codecs="vp9"')
+      || videoEl.canPlayType('video/webm')
+    );
+    const canPlayMp4 = !!(
+      videoEl.canPlayType('video/mp4; codecs="avc1.42E01E,mp4a.40.2"')
+      || videoEl.canPlayType('video/mp4; codecs="avc1.42E01E"')
+      || videoEl.canPlayType('video/mp4')
+    );
 
-    videoEl.dataset.loaded = 'true';
+    if (canPlayWebm && webmSrc) return webmSrc;
+    if (canPlayMp4 && mp4Src) return mp4Src;
+    return webmSrc || mp4Src;
   }
 
-  function playHeroVideo(videoEl) {
+  function attemptPlay(videoEl) {
     if (!videoEl) return;
     const playPromise = videoEl.play();
     if (playPromise && typeof playPromise.catch === 'function') {
@@ -278,6 +278,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function loadHeroVideo(videoEl) {
+    if (!videoEl || videoEl.dataset.loaded === 'true') return;
+    const src = resolveHeroVideoSource(videoEl);
+    if (!src) return;
+
+    videoEl.addEventListener('loadeddata', () => {
+      videoEl.classList.add('opacity-100');
+      hidePoster();
+    }, { once: true });
+
+    const webmSrc = videoEl.dataset.srcWebm || videoEl.dataset.src || '';
+    const mp4Src = videoEl.dataset.srcMp4 || '';
+    if (src === webmSrc && mp4Src) {
+      videoEl.addEventListener('error', () => {
+        if (videoEl.dataset.fallbackTried === 'true') return;
+        videoEl.dataset.fallbackTried = 'true';
+        videoEl.src = mp4Src;
+        videoEl.load();
+        attemptPlay(videoEl);
+      }, { once: true });
+    }
+
+    videoEl.src = src;
+    videoEl.load();
+    attemptPlay(videoEl);
+
+    videoEl.dataset.loaded = 'true';
+  }
+
+  function playHeroVideo(videoEl) {
+    if (!videoEl) return;
+    attemptPlay(videoEl);
+  }
+
   function unloadHeroVideo(videoEl) {
     if (!videoEl || videoEl.dataset.loaded !== 'true') return;
     videoEl.pause();
@@ -285,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     videoEl.removeAttribute('src');
     videoEl.load();
     videoEl.dataset.loaded = 'false';
+    videoEl.dataset.fallbackTried = 'false';
   }
 
   function getHeroVideosForViewport() {

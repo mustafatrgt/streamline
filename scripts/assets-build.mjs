@@ -130,7 +130,7 @@ async function rewriteHtmlWithVersions(htmlPath) {
 
   updated = await replaceAsync(
     updated,
-    /(\b(?:href|src|data-src)\s*=\s*)(["'])([^"']+)(\2)/gi,
+    /(\b(?:href|src|data-src(?:-[a-z0-9]+)?)\s*=\s*)(["'])([^"']+)(\2)/gi,
     async (match, prefix, quote, value, suffixQuote) => {
       const rewritten = await addVersionToUrl(value, htmlDir);
       return `${prefix}${quote}${rewritten}${suffixQuote}`;

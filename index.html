@@ -367,7 +367,7 @@
         }
     </style>
     <link rel="stylesheet" href="assets/css/app.min.css?v=2ae8f86093" />
-    <script src="assets/js/main.min.js?v=e6ab9f9685" defer></script>
+    <script src="assets/js/main.min.js?v=3739c4cd69" defer></script>
 </head>
 
 <body
@@ -424,7 +424,10 @@
                 <!-- Desktop: local video (loop, no controls) -->
                 <div class="hero-video-wrap hidden md:block z-[4]">
                     <video id="hero-video-desktop" class="opacity-0 transition-opacity duration-500" data-loaded="false"
-                        data-src="assets/video/banner-video-desktop.webm?v=5112f1a92a" autoplay muted loop playsinline preload="none"
+                        data-src="assets/video/banner-video-desktop.webm?v=5112f1a92a"
+                        data-src-webm="assets/video/banner-video-desktop.webm?v=5112f1a92a"
+                        data-src-mp4="assets/video/banner-video-desktop.mp4?v=7bae92c4e6"
+                        autoplay muted loop playsinline preload="none"
                         aria-label="Hero background video">
                         <track kind="captions" srclang="en" label="English captions"
                             src="assets/video/hero-background.en.vtt?v=9e9830d50e" />
@@ -433,7 +436,10 @@
                 <!-- Mobile: local video (loop, no controls) -->
                 <div class="hero-video-wrap md:hidden z-[4]">
                     <video id="hero-video-mobile" class="opacity-0 transition-opacity duration-500" data-loaded="false"
-                        data-src="assets/video/banner-video-mobile.webm?v=239372471d" autoplay muted loop playsinline preload="none"
+                        data-src="assets/video/banner-video-mobile.webm?v=239372471d"
+                        data-src-webm="assets/video/banner-video-mobile.webm?v=239372471d"
+                        data-src-mp4="assets/video/banner-video-mobile.mp4?v=879ba77c59"
+                        autoplay muted loop playsinline preload="none"
                         aria-label="Hero background video mobile">
                         <track kind="captions" srclang="en" label="English captions"
                             src="assets/video/hero-background.en.vtt?v=9e9830d50e" />
