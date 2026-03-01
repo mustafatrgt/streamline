@@ -60,23 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const hero = document.getElementById('hero');
+  const heroEndSentinel = document.getElementById('hero-end-sentinel');
   const scrollToTopBtn = document.getElementById('scroll-to-top');
-  if (hero && scrollToTopBtn) {
-    let heroBottom = 0;
-    function recalcHeroBottom() {
-      heroBottom = hero.getBoundingClientRect().top + window.scrollY + hero.offsetHeight;
-    }
+  if (heroEndSentinel && scrollToTopBtn) {
+    const topButtonObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      scrollToTopBtn.setAttribute('aria-hidden', entry && entry.isIntersecting ? 'true' : 'false');
+    }, {
+      root: null,
+      threshold: 0,
+      rootMargin: '-50px 0px 0px 0px',
+    });
 
-    function updateScrollToTopVisibility() {
-      scrollToTopBtn.setAttribute('aria-hidden', window.scrollY < heroBottom - 50 ? 'true' : 'false');
-    }
-
-    recalcHeroBottom();
-    window.addEventListener('scroll', updateScrollToTopVisibility, { passive: true });
-    window.addEventListener('resize', recalcHeroBottom, { passive: true });
-    window.addEventListener('orientationchange', recalcHeroBottom);
-    updateScrollToTopVisibility();
+    topButtonObserver.observe(heroEndSentinel);
     scrollToTopBtn.addEventListener('click', () => {
       smoothScrollTo(0);
     });
@@ -235,6 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const videoDesktop = document.getElementById('hero-video-desktop');
   const videoMobile = document.getElementById('hero-video-mobile');
   const desktopQuery = window.matchMedia('(min-width: 768px)');
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const reducedDataMode = !!(connection && (connection.saveData || ['slow-2g', '2g', '3g'].includes(connection.effectiveType)));
 
   function hidePoster() {
     if (!poster) return;
@@ -277,7 +275,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function syncHeroVideoForViewport() {
-    const desktopActive = desktopQuery.matches;
+    if (reducedDataMode) return;
+
+    const viewportWidths = [
+      window.innerWidth,
+      document.documentElement ? document.documentElement.clientWidth : 0,
+      window.visualViewport ? window.visualViewport.width : 0,
+      window.screen ? window.screen.width : 0,
+    ].filter((value) => Number.isFinite(value) && value > 0);
+
+    const viewportWidth = viewportWidths.length > 0 ? Math.min(...viewportWidths) : window.innerWidth;
+    const desktopActive = viewportWidth >= 768 || desktopQuery.matches;
     const activeVideo = desktopActive ? videoDesktop : videoMobile;
     const inactiveVideo = desktopActive ? videoMobile : videoDesktop;
 
@@ -285,7 +293,20 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHeroVideo(activeVideo);
   }
 
-  syncHeroVideoForViewport();
+  const scheduleHeroVideo = () => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(syncHeroVideoForViewport, { timeout: 1200 });
+    } else {
+      setTimeout(syncHeroVideoForViewport, 400);
+    }
+  };
+
+  if (document.readyState === 'complete') {
+    scheduleHeroVideo();
+  } else {
+    window.addEventListener('load', scheduleHeroVideo, { once: true });
+  }
+
   if (desktopQuery.addEventListener) {
     desktopQuery.addEventListener('change', syncHeroVideoForViewport);
   } else if (desktopQuery.addListener) {

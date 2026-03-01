@@ -24,8 +24,9 @@
     <link rel="icon" href="favicon.ico?v=87afccc19a" sizes="any" />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/montserrat-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/syne-latin.woff2" crossorigin />
-    <link rel="preload" as="image" href="img/hero-poster-mobile.avif?v=806c1a2621" media="(max-width: 767px)" />
-    <link rel="preload" as="image" href="img/hero-poster-desktop.avif?v=f16dabf911" media="(min-width: 768px)" />
+    <link rel="preload" as="image" href="img/hero-poster-mobile.avif?v=806c1a2621" fetchpriority="high"
+        imagesrcset="img/hero-poster-mobile.avif?v=806c1a2621 767w, img/hero-poster-desktop.avif?v=f16dabf911 1920w"
+        imagesizes="100vw" />
     <style>
         html,
         body {
@@ -76,6 +77,20 @@
             color: #fff;
         }
 
+        @media (min-width: 1280px) {
+            #desktop-nav {
+                display: flex;
+            }
+
+            #desktop-quote-btn {
+                display: block;
+            }
+
+            #mobile-menu-btn {
+                display: none;
+            }
+        }
+
         #hero {
             position: relative;
             min-height: 100vh;
@@ -107,10 +122,10 @@
             object-position: center;
         }
     </style>
-    <link rel="preload" as="style" href="assets/css/app.min.css?v=2b75428a7a" />
-    <link rel="stylesheet" href="assets/css/app.min.css?v=2b75428a7a" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="assets/css/app.min.css?v=2b75428a7a" /></noscript>
-    <script src="assets/js/main.min.js?v=8ea9144a67" defer></script>
+    <link rel="preload" as="style" href="assets/css/app.min.css?v=848f12c271" />
+    <link rel="stylesheet" href="assets/css/app.min.css?v=848f12c271" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="assets/css/app.min.css?v=848f12c271" /></noscript>
+    <script src="assets/js/main.min.js?v=5f58e795da" defer></script>
 </head>
 
 <body
@@ -218,7 +233,7 @@
                 <!-- Desktop: local video (loop, no controls) -->
                 <div class="hero-video-wrap hidden md:block z-[4]">
                     <video id="hero-video-desktop" class="opacity-0 transition-opacity duration-500" data-loaded="false"
-                        data-src="assets/video/banner-video-desktop.webm?v=17dcaa92de" autoplay muted loop playsinline preload="none"
+                        data-src="assets/video/banner-video-desktop.webm?v=5112f1a92a" autoplay muted loop playsinline preload="none"
                         aria-label="Hero background video">
                         <track kind="captions" srclang="en" label="English captions"
                             src="assets/video/hero-background.en.vtt?v=9e9830d50e" default />
@@ -227,7 +242,7 @@
                 <!-- Mobile: local video (loop, no controls) -->
                 <div class="hero-video-wrap md:hidden z-[4]">
                     <video id="hero-video-mobile" class="opacity-0 transition-opacity duration-500" data-loaded="false"
-                        data-src="assets/video/banner-video-mobile.webm?v=cd37dc028b" autoplay muted loop playsinline preload="none"
+                        data-src="assets/video/banner-video-mobile.webm?v=239372471d" autoplay muted loop playsinline preload="none"
                         aria-label="Hero background video mobile">
                         <track kind="captions" srclang="en" label="English captions"
                             src="assets/video/hero-background.en.vtt?v=9e9830d50e" default />
@@ -255,6 +270,7 @@
                 </div>
             </div>
         </section>
+        <div id="hero-end-sentinel" class="h-px w-full" aria-hidden="true"></div>
         <section class="py-24 px-6 max-w-7xl mx-auto">
             <div class="text-center mb-16 reveal">
                 <h2
